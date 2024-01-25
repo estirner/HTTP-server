@@ -6,9 +6,14 @@ def main():
         client_socket, addr = server_socket.accept()
         print(f"Connection from {addr} has been established.")
         request = client_socket.recv(1024)
-        print('Received request:')
-        print(request.decode('utf-8'))
-        response = 'HTTP/1.1 200 OK\r\n\r\n'
+        request_lines = request.decode('utf-8').split('\r\n')
+        start_line = request_lines[0].split(' ')
+        method, path, version = start_line
+        print(f'Received request for path: {path}')
+        if path == '/':
+            response = 'HTTP/1.1 200 OK\r\n\r\n'
+        else:
+            response = 'HTTP/1.1 404 Not Found\r\n\r\n'
         client_socket.send(bytes(response, 'utf-8'))
         client_socket.close()
 
