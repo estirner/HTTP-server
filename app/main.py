@@ -1,6 +1,4 @@
-# Uncomment this to pass the first stage
-# import socket
-
+import socket
 
 def main():
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
