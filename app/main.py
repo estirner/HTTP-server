@@ -10,8 +10,10 @@ def main():
         start_line = request_lines[0].split(' ')
         method, path, version = start_line
         print(f'Received request for path: {path}')
-        if path == '/':
-            response = 'HTTP/1.1 200 OK\r\n\r\n'
+        if path.startswith('/echo/'):
+            response_body = path[6:]
+            response_headers = f'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(response_body)}\r\n\r\n'
+            response = response_headers + response_body
         else:
             response = 'HTTP/1.1 404 Not Found\r\n\r\n'
         client_socket.send(bytes(response, 'utf-8'))
