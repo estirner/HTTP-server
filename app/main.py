@@ -29,10 +29,10 @@ def handle_client(client_socket, directory):
             response_headers = f'HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {len(response_body)}\r\n\r\n'
             response = response_headers.encode('utf-8') + response_body
         else:
-            response = 'HTTP/1.1 404 Not Found\r\n\r\n'
+            response = 'HTTP/1.1 404 Not Found\r\n\r\n'.encode('utf-8')
     else:
-        response = 'HTTP/1.1 404 Not Found\r\n\r\n'
-    client_socket.send(bytes(response, 'utf-8'))
+        response = 'HTTP/1.1 404 Not Found\r\n\r\n'.encode('utf-8')
+    client_socket.send(response)
     client_socket.close()
 
 def main():
