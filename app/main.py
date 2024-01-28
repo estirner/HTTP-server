@@ -25,7 +25,7 @@ def handle_client(client_socket, directory):
                 response = 'HTTP/1.1 404 Not Found\r\n\r\n'
     else:
         response = 'HTTP/1.1 404 Not Found\r\n\r\n'
-    client_socket.send(bytes(response, 'utf-8') if isinstance(response, str) else response)
+    client_socket.send(bytes(response, 'utf-8'))
     client_socket.close()
 
 def main():
