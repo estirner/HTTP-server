@@ -14,7 +14,7 @@ def handle_client(client_socket, directory):
         if directory is None:
             response = 'HTTP/1.1 400 Bad Request\r\n\r\n'
         else:
-            filename = path[7:]
+            filename = path.split('/')[-1]
             file_path = os.path.join(directory, filename)
             if os.path.exists(file_path):
                 with open(file_path, 'rb') as file:
@@ -25,7 +25,7 @@ def handle_client(client_socket, directory):
                 response = 'HTTP/1.1 404 Not Found\r\n\r\n'
     else:
         response = 'HTTP/1.1 404 Not Found\r\n\r\n'
-    client_socket.send(bytes(response, 'utf-8'))
+    client_socket.send(bytes(response, 'utf-8') if isinstance(response, str) else response)
     client_socket.close()
 
 def main():
