@@ -23,6 +23,8 @@ def handle_client(client_socket, directory):
                 response = bytes(response_headers, 'utf-8') + file_content
             else:
                 response = 'HTTP/1.1 404 Not Found\r\n\r\n'
+    elif path.startswith('/echo/'):
+        response = 'HTTP/1.1 200 OK\r\n\r\n' + path[6:]
     else:
         response = 'HTTP/1.1 404 Not Found\r\n\r\n'
     client_socket.send(bytes(response, 'utf-8') if isinstance(response, str) else response)
