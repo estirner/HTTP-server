@@ -1,5 +1,4 @@
 import argparse
-import mimetypes
 import os
 import socket
 import threading
