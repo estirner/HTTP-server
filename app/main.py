@@ -1,7 +1,10 @@
+import argparse
+import mimetypes
+import os
 import socket
 import threading
 
-def handle_client(client_socket):
+def handle_client(client_socket, directory):
     request = client_socket.recv(1024)
     request_lines = request.decode('utf-8').split('\r\n')
     _, path, _ = request_lines[0].split(' ')
@@ -19,17 +22,30 @@ def handle_client(client_socket):
             response = response_headers + user_agent
         else:
             response = 'HTTP/1.1 400 Bad Request\r\n\r\n'
+    elif path.startswith('/files/'):
+        filename = os.path.join(directory, path[7:])
+        if os.path.isfile(filename):
+            with open(filename, 'rb') as file:
+                response_body = file.read()
+            response_headers = f'HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {len(response_body)}\r\n\r\n'
+            response = response_headers.encode() + response_body
+        else:
+            response = 'HTTP/1.1 404 Not Found\r\n\r\n'
     else:
         response = 'HTTP/1.1 404 Not Found\r\n\r\n'
     client_socket.send(bytes(response, 'utf-8'))
     client_socket.close()
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--directory', type=str, required=True)
+    args = parser.parse_args()
+
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
     while True:
         client_socket, addr = server_socket.accept()
         print(f"Connection from {addr} has been established.")
-        client_thread = threading.Thread(target=handle_client, args=(client_socket,))
+        client_thread = threading.Thread(target=handle_client, args=(client_socket, args.directory))
         client_thread.start()
 
 if __name__ == "__main__":
