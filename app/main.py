@@ -44,7 +44,7 @@ def main():
     parser.add_argument('--directory')
     args = parser.parse_args()
 
-    server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
+    server_socket = socket.create_server(("localhost", 4221), reuse_port=false)
     while True:
         client_socket, addr = server_socket.accept()
         print(f"Connection from {addr} has been established.")
