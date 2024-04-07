@@ -42,6 +42,7 @@ def handle_client(client_socket, directory):
     elif method == 'POST' and path.startswith('/files/'):
         filename = path.split('/')[-1]
         file_path = os.path.join(directory, filename)
+        body = request_lines[-1]
         with open(file_path, 'w') as file:
             file.write(body)
         response = 'HTTP/1.1 201 Created\r\n\r\n'
